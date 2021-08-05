@@ -1,0 +1,122 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='dashboard.css')}}">
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+				aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">Weather Data Solution</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#">Dashboard</a></li>
+				<li><a href="#">Settings</a></li>
+				<li><a href="#">Profile</a></li>
+				<li><a href="{{ url_for('logout') }}">Log Out</a></li>
+			</ul>
+			<form class="navbar-form navbar-right">
+				<input type="text" class="form-control" placeholder="Search...">
+			</form>
+		</div>
+	</div>
+</nav>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-3 col-md-2 sidebar">
+			<ul class="nav nav-sidebar">
+				<li class="active"><a href="{{ url_for('dashboard') }}"> BOM Weather Data <span
+							class="sr-only">(current)</span></a></li>
+
+				<li><a href="{{ url_for('dashboard_pi') }}">Raspberry Pi Local Data</a></li>
+			</ul>
+			<ul class="nav nav-sidebar">
+				<li><a href="">Further nav items for future prototyping</a></li>
+				<li><a href="">Further production navbars</a></li>
+				<!-- <li><a href="">One more nav</a></li>
+            <li><a href="">Another nav item</a></li>
+            <li><a href="">More navigation</a></li> -->
+			</ul>
+			<!-- <ul class="nav nav-sidebar">
+            <li><a href="">Nav item again</a></li>
+            <li><a href="">One more nav</a></li>
+            <li><a href="">Another nav item</a></li>
+		</ul> -->
+	</div>
+	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+		<h1 class="page-header">Welcome, {{ name }}</h1>
+		<br>
+		<br>
+		<h2 class="sub-header" style="text-align: center"> {{ table_name }}</h2>
+	
+			<div class="row placeholders">
+				<div class="col-md-6">
+					Temperature Data
+					<div class="chart" id="scatterplot">
+						<script>
+							var graphs = {{ tempplot | safe }};
+							Plotly.plot('scatterplot', graphs, {});
+						</script>
+					</div>
+				</div>
+				<div class="col-md-6">
+					Humidity Data
+					<div class="chart" id="thingo2">
+						<script>
+							var graphs = {{ humidityplot | safe }};
+							Plotly.plot('thingo2', graphs, {});
+						</script>
+					</div>
+				</div>
+				<!-- <div class="col-xs-6 col-sm-3 placeholder">
+					<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+						width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+					<h4>Label</h4>
+					<span class="text-muted">Something else</span>
+				</div> -->
+			</div>
+
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<tr>
+						<th>Humidity</th>
+						<th>Temperature</th>
+						<th>Time</th>
+					</tr>
+
+					<!-- here is a for-loop to give us all the hazards -->
+					{% for i in range((data[0] | length)) %}
+					<!-- (data[0] | length) gives the # of pieces of data in the whole table, but it kinda fills up the screen if we do that.-->
+					<tr>
+						<td>{{ data[0][i] }}</td>
+						<td>{{ data[1][i] }}</td>
+						<td>{{ data[2][i] }}</td>
+
+
+					</tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+	</div>
+	<script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/plots.js') }}"></script>
+</div>
+{% endblock %}
