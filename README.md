@@ -1,6 +1,6 @@
 # flask-weather-exchange
 Data exchange system using flask for a school assessment.
-
+Hash user-authentication with a SHA-256 secured database for credentials.
 
 ## Install
 Clone the repo and create a venv / conda venv,
